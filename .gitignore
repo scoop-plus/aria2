@@ -1,0 +1,6 @@
+source
+*.zip
+aria2c.exe
+
+# FVM Version Cache
+.fvm/

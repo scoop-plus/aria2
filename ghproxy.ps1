@@ -1,3 +1,21 @@
+<#
+.SYNOPSIS
+    ghproxy test & config
+.DESCRIPTION
+    ghproxy test and config
+.PARAMETER Uri
+    Uri config for ghproxy.result
+.EXAMPLE
+    .\ghproxy.ps1
+    .\ghproxy.ps1 -Uri
+#>
+
+[CmdletBinding()]
+param(
+    [Uri] $Uri
+)
+
+
 function Test-CommandAvailable {
     param (
         [Parameter(Mandatory = $True, Position = 0)]
@@ -10,21 +28,25 @@ function Test-CommandAvailable {
 $ghfile = Convert-Path "$PSScriptRoot\ghproxy.json"
 $ghproxy = Get-Content $ghfile | ConvertFrom-Json
 
-# Test list
-$ghproxy.test = @()
-$ghproxy.list | ForEach-Object {
-    $res = Test-NetConnection ($_ -replace '^http[s]?://(.+?)[/]?$','$1')
-    if( $res.PingSucceeded ) {
-        $ghproxy.test += @{
-            url= $_
-            latency=$res.PingReplyDetails.RoundtripTime
+if ( $Uri ) {
+    $ghproxy.result = $Uri.ToString()
+    Write-Host "[*] config ghproxy: $($ghproxy.result)"
+} else {
+    # Test list
+    $ghproxy.test = @()
+    $ghproxy.list | ForEach-Object {
+        $res = Test-NetConnection ($_ -replace '^http[s]?://(.+?)[/]?$','$1')
+        if( $res.PingSucceeded ) {
+            $ghproxy.test += @{
+                url= $_
+                latency=$res.PingReplyDetails.RoundtripTime
+            }
         }
     }
+    Write-Host "[*] faster ghproxy: $($ghproxy.result)"
+    # Result
+    $ghproxy.result = ($ghproxy.test | Sort-Object -Property latency | Select-Object -First 1).url.TrimEnd('/') + '/'
 }
-
-# Result
-$ghproxy.result = ($ghproxy.test | Sort-Object -Property latency | Select-Object -First 1).url.TrimEnd('/') + '/'
-Write-Host "[*] fast ghproxy: $($ghproxy.result)"
 
 # Update
 $ghproxy.update_time = Get-Date -Format "yyyy-MM-dd HH:mm:ss"

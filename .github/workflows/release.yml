@@ -9,18 +9,23 @@ jobs:
     steps:
     - name: Checkout source
       uses: actions/checkout@v4
+
     - name: Build
       id: build
       run: .\build.ps1 -Clean -Make -Compress -Verbose
+
     - name: Load source/.env.build
       uses: xom9ikk/dotenv@v2.3.0
       with:
         path: source
         mode: build
+
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
         repository: scoop-plus/aria2
         token: ${{ secrets.GITHUB_TOKEN }}
         tag_name: v${{ env.source_tag }}-${{ env.build_date}}
-        files: release.zip
+        files: |
+          release.zip
+          release.zip.sha256

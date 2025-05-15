@@ -1,6 +1,4 @@
 source
 *.zip
+*.zip.sha256
 aria2c.exe
-
-# FVM Version Cache
-.fvm/

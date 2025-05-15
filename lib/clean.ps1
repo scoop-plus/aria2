@@ -22,3 +22,8 @@ if( Test-Path $CompressZip ) {
     Write-Verbose "clean zip: $CompressZip"
     Remove-Item -Force $CompressZip
 }
+
+if( Test-Path "$CompressZip.sha256" ) {
+    Write-Verbose "clean sha: $CompressZip.sha256"
+    Remove-Item -Force "$CompressZip.sha256"
+}

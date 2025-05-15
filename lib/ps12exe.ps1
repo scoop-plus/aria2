@@ -13,4 +13,4 @@ if (-not (Get-Module -ListAvailable ps12exe)) {
 }
 
 Write-Host "Make aria2c.exe ..."
-ps12exe -GolfMode -architecture 'x64' -Localize 'en-US' "$rootDir\aria2c.ps1" "$rootDir\aria2c.exe" | Write-Verbose
+ps12exe -GolfMode -SkipVersionCheck -architecture 'x64' -Localize 'en-US' "$rootDir\aria2c.ps1" "$rootDir\aria2c.exe" | Write-Verbose

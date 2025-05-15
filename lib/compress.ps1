@@ -9,7 +9,7 @@ if( $rootDir ) {
 $CompressZip = "$rootDir\release.zip"
 
 Write-Host "Compress zip .."
-$entries = Get-ChildItem -Path $root -Exclude @('.git*','*.zip')
+$entries = Get-ChildItem -Path $root -Exclude @('.git*','*.zip',"*.zip.sha256")
 $entries | Write-Verbose
 Compress-Archive -Force -LiteralPath $entries -CompressionLevel Optimal -DestinationPath $CompressZip
 

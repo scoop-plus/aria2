@@ -15,6 +15,7 @@ jobs:
       run: .\build.ps1 -Clean -Make -Compress -Verbose
 
     - name: Load source/.env.build
+      id: dotenv
       uses: xom9ikk/dotenv@v2.3.0
       with:
         path: source
@@ -25,6 +26,20 @@ jobs:
       with:
         repository: scoop-plus/aria2
         token: ${{ secrets.GITHUB_TOKEN }}
+        tag_name: v${{ env.source_tag }}-${{ env.build_date}}
+        files: |
+          release.zip
+          release.zip.sha256
+
+    - name: Release to Gitea
+      env:
+        GITEA_RELEASE: ${{ secrets.GITEA_TOKEN }}
+      if: ${{ env.GITEA_RELEASE }}
+      uses: akkuman/gitea-release-action@v1
+      with:
+        server_url: https://gitea.com
+        repository: scoop-plus/aria2
+        token: ${{ secrets.GITEA_TOKEN }}
         tag_name: v${{ env.source_tag }}-${{ env.build_date}}
         files: |
           release.zip

@@ -40,6 +40,7 @@ jobs:
         server_url: https://gitea.com
         repository: scoop-plus/aria2
         token: ${{ secrets.GITEA_TOKEN }}
+        name: v${{ env.source_tag }}-${{ env.build_date}}
         tag_name: v${{ env.source_tag }}-${{ env.build_date}}
         files: |
           release.zip
